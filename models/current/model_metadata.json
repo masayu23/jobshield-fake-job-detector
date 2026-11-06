@@ -1,0 +1,44 @@
+{
+  "threshold": 0.7827271690741614,
+  "model_name": "A. Logistic Regression",
+  "raw_columns": [
+    "title",
+    "location",
+    "department",
+    "salary_range",
+    "company_profile",
+    "description",
+    "requirements",
+    "benefits",
+    "telecommuting",
+    "has_company_logo",
+    "has_questions",
+    "employment_type",
+    "required_experience",
+    "required_education",
+    "industry",
+    "function"
+  ],
+  "metrics_test_holdout": {
+    "Accuracy": 0.9875,
+    "Precision": 0.9262,
+    "Recall": 0.807,
+    "F1 (palsu)": 0.8625,
+    "F1 @thr 0.5": 0.8466,
+    "ROC-AUC": 0.9934,
+    "PR-AUC": 0.94,
+    "Threshold": 0.7827
+  },
+  "metrics_cv": {
+    "PR-AUC": 0.9086,
+    "ROC-AUC": 0.9888,
+    "Precision": 0.9109,
+    "Recall": 0.7912,
+    "F1 (palsu)": 0.8469,
+    "Threshold": 0.7827,
+    "Waktu (dtk)": 100.4007
+  },
+  "refit_on_all_data": true,
+  "sklearn_version": "1.9.1",
+  "created_at": "2026-11-04T18:01:32"
+}
