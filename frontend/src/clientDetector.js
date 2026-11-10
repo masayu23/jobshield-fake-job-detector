@@ -5,11 +5,11 @@ let cachedModel = null;
 
 export async function loadModel() {
   if (cachedModel) return cachedModel;
-  
+
   // Ambil model_client.json dari public folder
   const baseUrl = import.meta.env.BASE_URL || './';
   const url = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}model_client.json`;
-  
+
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Gagal memuat model klien dari ${url}: ${res.status}`);
@@ -20,9 +20,9 @@ export async function loadModel() {
 
 export async function predictSingleClient(jobData) {
   const model = await loadModel();
-  
+
   const _s = (x) => (x !== null && x !== undefined ? String(x) : "");
-  
+
   const _cleanText = (s) => {
     let text = _s(s);
     // Unescape HTML entities sederhana
@@ -85,7 +85,7 @@ export async function predictSingleClient(jobData) {
   // 2. Hitung One-Hot Encoded (Kategori)
   const locStr = _s(jobData.location);
   const country = locStr.split(',')[0].trim().toUpperCase() || "UNKNOWN";
-  
+
   const catVals = {
     country,
     employment_type: _s(jobData.employment_type) || "unknown",
@@ -110,7 +110,7 @@ export async function predictSingleClient(jobData) {
 
   // 3. Hitung Fitur Numerik
   const countMatches = (str, pattern) => (str.match(pattern) || []).length;
-  
+
   const numVals = {
     len_title: Math.log1p(_s(jobData.title).length),
     len_profile: Math.log1p(_s(jobData.company_profile).length),
@@ -144,7 +144,7 @@ export async function predictSingleClient(jobData) {
   const z = model.intercept + textDot + oheDot + numDot;
   const proba = 1.0 / (1.0 + Math.exp(-z));
   const probaRounded = Math.round(proba * 10000) / 10000;
-  
+
   const thr = model.threshold;
   const isFake = proba >= thr;
   const riskLevel = isFake ? "TINGGI" : (proba >= thr / 2 ? "WASPADA" : "RENDAH");
@@ -207,7 +207,7 @@ function parseCsv(text) {
 export async function predictBatchCsvClient(file) {
   const text = await file.text();
   const rows = parseCsv(text);
-  
+
   if (rows.length === 0) {
     throw new Error("File CSV kosong atau tidak memiliki baris data yang valid.");
   }
@@ -246,7 +246,7 @@ export async function predictBatchCsvClient(file) {
 // Basis Pengetahuan Penasihat Keamanan Lowongan Kerja (Offline)
 export function getKnowledgeBaseReply(latestMessage, jobContext) {
   const qLower = (latestMessage || "").toLowerCase();
-  
+
   let contextNote = "";
   if (jobContext && jobContext.title) {
     contextNote = `\n\n*(Menganalisis lowongan terkait: "${jobContext.title}" — Status Prediksi: ${jobContext.prediksi} | Probabilitas: ${(Number(jobContext.probabilitas_palsu) * 100).toFixed(1)}%)*`;
@@ -302,7 +302,6 @@ export function getKnowledgeBaseReply(latestMessage, jobContext) {
       "1. **Cek Email Pengirim:** Rekruter resmi menggunakan domain email perusahaan (`hrd@perusahaan.com`), bukan `@gmail.com` atau `@yahoo.com`.\n" +
       "2. **Cek Situs Resmi:** Pastikan lowongan terdaftar di tab *Karier / Career* pada situs resmi perusahaan terkait.\n" +
       "3. **Prinsip Nol Rupiah:** Tidak ada biaya apa pun untuk proses rekrutmen kerja profesional.\n\n" +
-      "*Tips: Jika Anda memasukkan Google Gemini API Key di menu atas, asisten dapat memberikan konsultasi analisis interaktif berbasis Gemini AI secara real-time!*" +
       contextNote
     );
   }
@@ -314,7 +313,7 @@ export async function chatAssistantClient(messages, jobContext = null, apiKey = 
   // Jika ada API Key Gemini, panggil langsung Google Gemini REST API dari browser
   if (apiKey && apiKey.trim().length > 0) {
     try {
-      const systemInstruction = 
+      const systemInstruction =
         "Kamu adalah JobShield AI Assistant, seorang pakar keamanan siber, anti-fraud, " +
         "dan konsultan perlindungan pencari kerja profesional di Indonesia. " +
         "Tugasmu adalah menganalisis indikasi penipuan lowongan kerja, mengidentifikasi modus operandi " +
