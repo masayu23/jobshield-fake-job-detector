@@ -314,7 +314,6 @@ def _generate_knowledge_base_fallback(query: str, job_context: dict | None) -> s
             "- Pastikan domain email pengirim menggunakan email korporat resmi (`@nama-perusahaan.com`), bukan webmail gratisan (@gmail, @yahoo).\n"
             "- Jangan pernah mentransfer uang untuk alasan apa pun (tiket, seragam, modul tes).\n"
             "- Periksa apakah lowongan tersebut benar-benar tercantum di laman karier resmi perusahaan.\n\n"
-            "*Catatan: Anda dapat memasukkan Google Gemini API Key pada bilah atas untuk mengaktifkan penalaran interaktif Gemini 1.5 Flash secara langsung!*"
             f"{context_note}"
         )
 
