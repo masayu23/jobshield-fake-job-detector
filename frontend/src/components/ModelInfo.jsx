@@ -136,28 +136,6 @@ export default function ModelInfo() {
             </div>
           )}
 
-          {/* 16 Raw Columns Section */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-            <h3 className="font-bold text-slate-900 text-sm sm:text-base flex items-center space-x-2">
-              <Database className="w-5 h-5 text-blue-600" />
-              <span>16 Kolom Fitur Mentah (Raw Features Contract)</span>
-            </h3>
-            <p className="text-xs text-slate-500">
-              Pipeline scikit-learn menerima 16 parameter input mentah berikut untuk membentuk representasi TF-IDF dan One-Hot Encoding:
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              {(info.raw_columns || []).map((col) => (
-                <span
-                  key={col}
-                  className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-mono font-medium border border-slate-200/70"
-                >
-                  {col}
-                </span>
-              ))}
-            </div>
-          </div>
-
           {/* Privacy & Zero-Retention Notice */}
           <div className="bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 space-y-3">
             <div className="flex items-center space-x-2 text-emerald-400">
