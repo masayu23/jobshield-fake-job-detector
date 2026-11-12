@@ -95,13 +95,14 @@ export default function BatchPredict() {
   const handleExportResults = () => {
     if (!batchData || !batchData.results) return;
 
+    const threshold = batchData.threshold ?? 0.7827;
     const headers = ['Indeks', 'Prediksi', 'Probabilitas_Palsu', 'Tingkat_Risiko', 'Ambang_Batas'];
     const rows = batchData.results.map((item) => [
       sanitizeCsvCell(item.index + 1),
       sanitizeCsvCell(item.prediksi),
       sanitizeCsvCell((item.probabilitas_palsu * 100).toFixed(2) + '%'),
       sanitizeCsvCell(item.tingkat_risiko),
-      sanitizeCsvCell((batchData.threshold * 100).toFixed(2) + '%'),
+      sanitizeCsvCell((threshold * 100).toFixed(2) + '%'),
     ]);
 
     const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
@@ -122,8 +123,10 @@ export default function BatchPredict() {
     return true;
   }) || [];
 
+  const totalCount = batchData?.count ?? batchData?.total ?? batchData?.results?.length ?? 0;
   const fakeCount = batchData?.results.filter((r) => r.prediksi === 'PALSU').length || 0;
-  const legitCount = (batchData?.count || 0) - fakeCount;
+  const legitCount = Math.max(0, totalCount - fakeCount);
+  const threshold = batchData?.threshold ?? 0.7827;
 
   return (
     <div className="space-y-6">
@@ -250,7 +253,7 @@ export default function BatchPredict() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
               <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Dievaluasi</span>
-              <p className="text-2xl font-extrabold text-slate-900 mt-1">{batchData.count} Lowongan</p>
+              <p className="text-2xl font-extrabold text-slate-900 mt-1">{totalCount} Lowongan</p>
             </div>
 
             <div className="p-4 rounded-xl bg-rose-50 border border-rose-200">
@@ -284,7 +287,7 @@ export default function BatchPredict() {
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
-                Semua ({batchData.count})
+                Semua ({totalCount})
               </button>
               <button
                 type="button"
@@ -375,7 +378,7 @@ export default function BatchPredict() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-slate-500">
-                      {(batchData.threshold * 100).toFixed(1)}%
+                      {(threshold * 100).toFixed(1)}%
                     </td>
                   </tr>
                 ))}

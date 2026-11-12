@@ -212,6 +212,7 @@ export async function predictBatchCsvClient(file) {
     throw new Error("File CSV kosong atau tidak memiliki baris data yang valid.");
   }
 
+  const model = await loadModel();
   const results = [];
   let fakeCount = 0;
   let realCount = 0;
@@ -225,7 +226,7 @@ export async function predictBatchCsvClient(file) {
     if (pred.tingkat_risiko === "TINGGI") highRiskCount++;
 
     results.push({
-      index: i + 1,
+      index: i,
       title: row.title || `Lowongan #${i + 1}`,
       prediksi: pred.prediksi,
       probabilitas_palsu: pred.probabilitas_palsu,
@@ -234,11 +235,13 @@ export async function predictBatchCsvClient(file) {
   }
 
   return {
+    count: rows.length,
     total: rows.length,
+    threshold: model.threshold,
     fake_count: fakeCount,
     real_count: realCount,
     high_risk_count: highRiskCount,
-    model: "Logistic Regression (Client-side AI)",
+    model: `${model.model_name} (Client-side AI)`,
     results,
   };
 }
